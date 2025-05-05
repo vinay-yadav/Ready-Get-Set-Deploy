@@ -31,9 +31,12 @@ SECRET_KEY = config("DJANGO_SECRET_KEY", default=get_random_secret_key())
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 PROJECT_NAME = config("PROJECT_NAME", default="Unset Project Name")
 
-ALLOWED_HOSTS = [
-    ".railway.app"
-]
+if not DEBUG:
+    ALLOWED_HOSTS = [
+        ".railway.app"
+    ]
+else:
+    ALLOWED_HOSTS = []
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.railway.app",
@@ -48,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'commando'
 ]
 
 MIDDLEWARE = [
