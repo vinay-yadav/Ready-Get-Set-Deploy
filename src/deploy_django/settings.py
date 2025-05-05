@@ -29,6 +29,7 @@ SECRET_KEY = config("DJANGO_SECRET_KEY", default=get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
+PROJECT_NAME = config("PROJECT_NAME", default="Unset Project Name")
 
 ALLOWED_HOSTS = [
     ".railway.app"
