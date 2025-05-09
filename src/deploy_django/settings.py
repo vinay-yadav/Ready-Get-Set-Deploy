@@ -65,6 +65,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.railway.app",
 ]
 
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+
 # Application definition
 
 INSTALLED_APPS = [
