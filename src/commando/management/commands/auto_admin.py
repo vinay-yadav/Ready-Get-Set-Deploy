@@ -1,9 +1,10 @@
 from typing import Any
 
+from decouple import config
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
-from decouple import config
+User = get_user_model()
 
 
 class Command(BaseCommand):
@@ -16,7 +17,6 @@ class Command(BaseCommand):
 
     def handle(self, *args: Any, **options: Any):
         force = options.get("force", False)
-        User = get_user_model()
         superusers = User.objects.filter(is_superuser=True)
         if superusers.exists() and not force:
             self.stdout.write("Superuser(s) already exists")
@@ -33,17 +33,17 @@ class Command(BaseCommand):
             admin_instance.save()
             self.stdout.write(
                 self.style.SUCCESS(
-                    f"Successfully updated admin user {admin_username} with new password"
+                    f"Successfully updated admin user {admin_username} with new password"  # noqa
                 )
             )
             return
-        admin_instance = User.objects.create_superuser(
+        User.objects.create_superuser(
             username=admin_username,
             email=admin_email,
             password=admin_password,
         )
         self.stdout.write(
             self.style.SUCCESS(
-                f"Successfully created admin user {admin_username} with password {admin_password}"
+                f"Successfully created admin user {admin_username} with password {admin_password}"  # noqa
             )
         )
