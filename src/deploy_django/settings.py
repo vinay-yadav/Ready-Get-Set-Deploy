@@ -32,33 +32,34 @@ SECRET_KEY = config("DJANGO_SECRET_KEY", default=get_random_secret_key())
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 PROJECT_NAME = config("PROJECT_NAME", default="Unset Project Name")
 
-# default backend
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = config("EMAIL_HOST", cast=str, default=None)
-EMAIL_PORT = config("EMAIL_PORT", cast=str, default="587")  # Recommended
-EMAIL_HOST_USER = config("EMAIL_HOST_USER", cast=str, default=None)
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", cast=str, default=None)
-# Use EMAIL_PORT 587 for TLS
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True)
-# EUse MAIL_PORT 465 for SSL
-EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)
+# ---------------------- Installed Apps ----------------------
+# Application definition
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-SERVER_EMAIL = EMAIL_HOST_USER
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "whitenoise.runserver_nostatic",
+    "django.contrib.staticfiles",
+    "commando",
+]
 
-ADMIN_USER_NAME = config("ADMIN_USER_NAME", default="Admin user")
-ADMIN_USER_EMAIL = config("ADMIN_USER_EMAIL", default=None)
+# ---------------------- Middleware ----------------------
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
 
-MANAGERS = []
-ADMINS = []
-if all([ADMIN_USER_NAME, ADMIN_USER_EMAIL]):
-    ADMINS += [(f"{ADMIN_USER_NAME}", f"{ADMIN_USER_EMAIL}")]
-    MANAGERS = ADMINS
-
-if not DEBUG:
-    ALLOWED_HOSTS = [".railway.app"]
-else:
-    ALLOWED_HOSTS = []
+# ---------------------- Allowed Hosts & CSRF ----------------------
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"] if DEBUG else [".railway.app"]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.railway.app",
@@ -82,32 +83,7 @@ for host in RAILWAY_HOSTS:
         else:
             CSRF_TRUSTED_ORIGINS.append(f"{protocol}://{host}")
 
-# Application definition
-
-INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "whitenoise.runserver_nostatic",
-    "django.contrib.staticfiles",
-    "commando",
-]
-
-MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-]
-
-ROOT_URLCONF = "deploy_django.urls"
-
+# ---------------------- Templates ----------------------
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -123,8 +99,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "deploy_django.wsgi.application"
-
+# ---------------------- Database ----------------------
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -144,35 +119,20 @@ if DATABASE_URL:
     ):
         DATABASES = {"default": dj_database_url.config(default=DATABASE_URL)}
 
+# ---------------------- Authentication ----------------------
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"  # noqa
     },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
-LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "UTC"
-
-USE_I18N = True
-
-USE_TZ = True
-
+# ---------------------- Static Files ----------------------
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
@@ -194,11 +154,32 @@ STORAGES = {
     },
 }
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+# ---------------------- Email ----------------------
+# default backend
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = config("EMAIL_HOST", cast=str, default=None)
+EMAIL_PORT = config("EMAIL_PORT", cast=str, default="587")  # Recommended
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", cast=str, default=None)
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", cast=str, default=None)
+# Use EMAIL_PORT 587 for TLS
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True)
+# EUse MAIL_PORT 465 for SSL
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
 
+# ---------------------- Admins and Managers ----------------------
+ADMIN_USER_NAME = config("ADMIN_USER_NAME", default="Admin user")
+ADMIN_USER_EMAIL = config("ADMIN_USER_EMAIL", default=None)
+
+MANAGERS = []
+ADMINS = []
+if all([ADMIN_USER_NAME, ADMIN_USER_EMAIL]):
+    ADMINS += [(f"{ADMIN_USER_NAME}", f"{ADMIN_USER_EMAIL}")]
+    MANAGERS = ADMINS
+
+# ---------------------- Caching (Redis) ----------------------
 # Redis Cache
 REDIS_URL = config("REDIS_URL", cast=str, default="")
 
@@ -212,3 +193,22 @@ if REDIS_URL:
             },
         }
     }
+
+# ---------------------- Defaults ----------------------
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+ROOT_URLCONF = "deploy_django.urls"
+WSGI_APPLICATION = "deploy_django.wsgi.application"
+
+# Internationalization
+# https://docs.djangoproject.com/en/5.2/topics/i18n/
+
+LANGUAGE_CODE = "en-us"
+
+TIME_ZONE = "UTC"
+
+USE_I18N = True
+
+USE_TZ = True
