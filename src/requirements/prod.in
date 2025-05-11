@@ -1,0 +1,7 @@
+Django==5.2
+python-decouple
+gunicorn
+dj-database-url
+psycopg[binary]
+whitenoise[brotli]
+django-redis
