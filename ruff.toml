@@ -1,0 +1,5 @@
+# Same as Black.
+line-length = 88
+indent-width = 4
+
+lint.extend-select = ["E", "I", "N", "R"]

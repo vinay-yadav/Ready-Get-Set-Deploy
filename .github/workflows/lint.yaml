@@ -1,0 +1,25 @@
+name: Lint with Ruff
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"  # Or your project's version
+
+      - name: Install Ruff
+        run: pip install ruff
+
+      - name: Run Ruff
+        working-directory: src
+        run: ruff check  # Lint the current directory

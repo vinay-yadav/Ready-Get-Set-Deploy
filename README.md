@@ -1,3 +1,4 @@
 # Ready-Get-Set-Deploy
 
-Continue: https://youtu.be/A4Pn2lEdoLQ?si=fNQK6irrP5ul8nta&t=6785
+## Key-points
+1. Rav, is a requirements management tool and has a dependency on pip-tools.
